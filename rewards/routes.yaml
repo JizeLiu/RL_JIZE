@@ -1,0 +1,23 @@
+# data_source (glob) -> rewards. First match wins. Edit freely; see dispatch.py for semantics.
+routes:
+  - match: "math/*"
+    rewards:
+      - {name: math_verify, weight: 1.0}
+
+  - match: "ifeval/*"
+    rewards:
+      - {name: instruction_following, weight: 1.0}
+
+  # knowledge QA judged against a reference answer by an LLM (needs RLX_JUDGE_* env)
+  - match: "knowledge/*"
+    rewards:
+      - {name: llm_judge, weight: 1.0, args: {rubric: reference, use_reference: true}}
+
+  # open-ended chat judged on a rubric, mixed with a hard format constraint
+  - match: "chat/*"
+    rewards:
+      - {name: llm_judge, weight: 0.8, args: {rubric: helpfulness}}
+      - {name: instruction_following, weight: 0.2}
+
+# unmatched data_source -> verl.utils.reward_score.default_compute_score (gsm8k, math_dapo, ...)
+fallback: verl

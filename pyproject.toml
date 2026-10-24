@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rlx"
+version = "0.1.0"
+description = "Extensions (algorithms, rewards, data tools, Slurm recipes) around an unmodified VERL"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pyyaml"]
+
+[project.optional-dependencies]
+data = ["pandas", "pyarrow", "openai", "tqdm"]
+rewards = ["math-verify"]
+test = ["pytest", "torch", "pandas", "pyarrow"]
+
+[tool.setuptools.packages.find]
+include = ["rlx*", "rewards*", "data_process*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
